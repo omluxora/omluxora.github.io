@@ -1,523 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>OMLUXORA</title></head>
+<body style="text-align:center;padding:100px;background:#f0f0f0;">
+<h1 style="color:#0066cc;font-size:50px;">🚀 OMLUXORA</h1>
+<p style="font-size:24px;color:#333;">Website Live! 🎉</p>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmLuxora</title>
-
-<style>
-
-:root{
---primary:#ff5722;
---dark:#333;
---light:#f4f4f4;
---white:#fff;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
-}
-
-body{
-background:var(--light);
-padding-bottom:50px;
-}
-
-header{
-background:var(--primary);
-color:#fff;
-padding:15px 20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-gap:10px;
-position:sticky;
-top:0;
-z-index:100;
-}
-
-.logo{
-font-size:1.5rem;
-font-weight:bold;
-}
-
-.search-container{
-flex-grow:1;
-max-width:400px;
-margin:0 15px;
-}
-
-.search-input{
-width:100%;
-padding:8px 15px;
-border-radius:20px;
-border:none;
-outline:none;
-}
-
-.cart-icon{
-font-size:1.2rem;
-}
-
-.banner{
-max-width:1200px;
-margin:20px auto;
-padding:0 15px;
-}
-
-.banner img{
-width:100%;
-border-radius:20px;
-}
-
-.hero{
-background:linear-gradient(45deg,#ff9a9e,#fad0c4);
-padding:40px 20px;
-text-align:center;
-margin-bottom:20px;
-}
-
-.categories{
-display:flex;
-gap:10px;
-overflow-x:auto;
-justify-content:center;
-padding:0 10px;
-margin-bottom:20px;
-}
-
-.cat-btn{
-background:#fff;
-border:1px solid #ddd;
-padding:8px 15px;
-border-radius:20px;
-cursor:pointer;
-}
-
-.cat-btn.active,
-.cat-btn:hover{
-background:var(--primary);
-color:#fff;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:0 15px;
-}
-
-.product-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:15px;
-}
-
-.product-card{
-background:#fff;
-border-radius:8px;
-overflow:hidden;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-display:flex;
-flex-direction:column;
-}
-
-.product-img{
-width:100%;
-height:180px;
-object-fit:cover;
-background:#eee;
-}
-
-.product-info{
-padding:10px;
-display:flex;
-flex-direction:column;
-flex-grow:1;
-}
-
-.product-title{
-font-size:.9rem;
-margin-bottom:5px;
-}
-
-.product-price{
-font-weight:bold;
-color:var(--primary);
-margin-bottom:10px;
-}
-
-.buy-btn{
-margin-top:auto;
-background:var(--primary);
-color:#fff;
-border:none;
-padding:8px;
-border-radius:4px;
-cursor:pointer;
-}
-
-.admin-trigger{
-text-align:center;
-font-size:2rem;
-color:#ccc;
-margin-top:50px;
-cursor:pointer;
-}
-
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.5);
-justify-content:center;
-align-items:center;
-z-index:1000;
-}
-
-.modal-content{
-background:#fff;
-padding:25px;
-border-radius:8px;
-width:90%;
-max-width:500px;
-}
-
-.close-btn{
-float:right;
-cursor:pointer;
-font-size:1.4rem;
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border:1px solid #ddd;
-border-radius:4px;
-}
-
-.action-btn{
-background:var(--primary);
-color:#fff;
-border:none;
-padding:10px;
-border-radius:4px;
-cursor:pointer;
-width:100%;
-}
-
-.notification{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#333;
-color:#fff;
-padding:10px 20px;
-border-radius:5px;
-display:none;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmLuxora </title>
+    <style>
+        :root { --primary: #ff5722; --dark: #333; --light: #f4f4f4; --white: #fff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light); padding-bottom: 50px; }
+        header { background-color: var(--primary); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px;}
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .search-container { flex-grow: 1; max-width: 400px; margin: 0 15px; }
+        .search-input { width: 100%; padding: 8px 15px; border-radius: 20px; border: none; outline: none; }
+        .cart-icon { font-size: 1.2rem; }
+        .hero { background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); padding: 40px 20px; text-align: center; margin-bottom: 20px; }
+        .hero h1 { color: var(--dark); margin-bottom: 10px; }
+        .categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding: 0 10px; }
+        .cat-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .product-card { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .product-img { width: 100%; height: 180px; object-fit: cover; background-color: #eee; }
+        .product-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-title { font-size: 0.9rem; margin-bottom: 5px; color: var(--dark); }
+        .product-price { font-weight: bold; color: var(--primary); font-size: 1.1rem; margin-bottom: 10px; }
+        .buy-btn { margin-top: auto; background: var(--primary); color: var(--white); border: none; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; }
+        .admin-trigger { text-align: center; margin-top: 50px; font-size: 2rem; color: #ccc; cursor: pointer; padding: 20px; }
+        .admin-trigger:hover { color: var(--primary); transform: scale(1.2); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--white); padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .action-btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .delete-btn { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+        .complete-btn { background: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+        .notification { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 2000; }
+    </style>
 </head>
-
 <body>
-
-<header>
-
-<div class="logo">OmLuxora</div>
-
-<div class="search-container">
-<input type="text" id="searchBar" class="search-input"
-placeholder="Search products..." onkeyup="searchProducts()">
+    <header>
+        <div class="logo">OmLuxora</div>
+        <div class="search-container">
+            <input type="text" id="searchBar" class="search-input" placeholder="Search products..." onkeyup="searchProducts()">
+        </div>
+        <div class="cart-icon">🛒 Cart (0)</div>
+    </header>
+    <div style="max-width:1200px;margin:20px auto;padding:0 15px;">
+<img src="abc.png" style="width:100%;border-radius:10px;">
 </div>
-
-<div class="cart-icon">🛒</div>
-
-</header>
-
-<div class="banner">
-<img src="abc.png">
-</div>
-
-<div class="hero">
-<h1>Welcome to OmLuxora</h1>
-<p>Best Deals, Best Prices</p>
-</div>
-
-<div class="categories">
-
-<button class="cat-btn active"
-onclick="filterProducts('all')">All</button>
-
-<button class="cat-btn"
-onclick="filterProducts('Electronics')">Electronics</button>
-
-<button class="cat-btn"
-onclick="filterProducts('Fashion')">Fashion</button>
-
-<button class="cat-btn"
-onclick="filterProducts('Home')">Home</button>
-
-<button class="cat-btn"
-onclick="filterProducts('Beauty')">Beauty</button>
-
-</div>
-
-<div class="container">
-<div class="product-grid" id="productGrid"></div>
-</div>
-
-<div class="admin-trigger" onclick="openAdmin()">ॐ</div>
-
-<div class="modal" id="adminModal">
-<div class="modal-content">
-
-<span class="close-btn"
-onclick="closeModal()">×</span>
-
-<h3>Add Product</h3>
-
-<input id="pName" placeholder="Product name">
-<input id="pPrice" placeholder="Price">
-
-<input id="pImage"
-placeholder="Image URL">
-
-<select id="pCategory">
-
-<option>Electronics</option>
-<option>Fashion</option>
-<option>Home</option>
-<option>Beauty</option>
-
-</select>
-
-<button class="action-btn"
-onclick="addProduct()">Add Product</button>
-
-</div>
-</div>
-
-<div class="notification" id="notification">
-Done
-</div>
-
-<script>
-
-let products=[
-{
-id:1,
-name:"Wireless Headphones",
-price:999,
-category:"Electronics",
-image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
-},
-
-{
-id:2,
-name:"Running Shoes",
-price:1499,
-category:"Fashion",
-image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
-},
-
-{
-id:3,
-name:"Smart Watch",
-price:2499,
-category:"Electronics",
-image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
-}
-
-]
-
-let currentCategory="all"
-
-function renderProducts(){
-
-let grid=document.getElementById("productGrid")
-
-grid.innerHTML=""
-
-let filtered=products
-
-if(currentCategory!=="all")
-filtered=products.filter(p=>p.category===currentCategory)
-
-filtered.forEach(product=>{
-
-let card=document.createElement("div")
-
-card.className="product-card"
-
-card.innerHTML=`
-
-<img src="${product.image}"
-class="product-img">
-
-<div class="product-info">
-
-<div class="product-title">
-${product.name}
-</div>
-
-<div class="product-price">
-₹${product.price}
-</div>
-
-<button class="buy-btn">
-Buy Now
-</button>
-
-</div>
-`
-
-grid.appendChild(card)
-
-})
-
-}
-
-function filterProducts(cat){
-
-currentCategory=cat
-
-document
-.querySelectorAll(".cat-btn")
-.forEach(btn=>btn.classList.remove("active"))
-
-event.target.classList.add("active")
-
-renderProducts()
-
-}
-
-function searchProducts(){
-
-let term=document
-.getElementById("searchBar")
-.value
-.toLowerCase()
-
-let grid=document
-.getElementById("productGrid")
-
-grid.innerHTML=""
-
-products
-.filter(p=>p.name
-.toLowerCase()
-.includes(term))
-.forEach(product=>{
-
-let card=document
-.createElement("div")
-
-card.className="product-card"
-
-card.innerHTML=`
-
-<img src="${product.image}"
-class="product-img">
-
-<div class="product-info">
-
-<div class="product-title">
-${product.name}
-</div>
-
-<div class="product-price">
-₹${product.price}
-</div>
-
-<button class="buy-btn">
-Buy Now
-</button>
-
-</div>
-`
-
-grid.appendChild(card)
-
-})
-
-}
-
-function openAdmin(){
-
-document
-.getElementById("adminModal")
-.style.display="flex"
-
-}
-
-function closeModal(){
-
-document
-.getElementById("adminModal")
-.style.display="none"
-
-}
-
-function addProduct(){
-
-let name=document
-.getElementById("pName").value
-
-let price=document
-.getElementById("pPrice").value
-
-let image=document
-.getElementById("pImage").value
-
-let category=document
-.getElementById("pCategory").value
-
-products.push({
-
-id:Date.now(),
-name:name,
-price:price,
-category:category,
-image:image
-
-})
-
-renderProducts()
-
-closeModal()
-
-showNotification("Product Added")
-
-}
-
-function showNotification(text){
-
-let n=document
-.getElementById("notification")
-
-n.innerText=text
-
-n.style.display="block"
-
-setTimeout(()=>{
-
-n.style.display="none"
-
-},2000)
-
-}
-
-renderProducts()
-
-</script>
-
+    <div class="hero"><h1>Welcome to OmLuxora</h1><p>Best Deals, Best Prices</p></div>
+    
+    <div class="categories" id="categoryContainer">
+        <button class="cat-btn active" onclick="filterProducts('all')">All</button>
+        <button class="cat-btn" onclick="filterProducts('Electronics')">Electronics</button>
+        <button class="cat-btn" onclick="filterProducts('Fashion')">Fashion</button>
+        <button class="cat-btn" onclick="filterProducts('Home')">Home</button>
+        <button class="cat-btn" onclick="filterProducts('Beauty')">Beauty</button>
+        <button class="cat-btn" onclick="filterProducts('Sports')">Sports</button>
+        <button class="cat-btn" onclick="filterProducts('Toys')">Toys</button>
+        <button class="cat-btn" onclick="filterProducts('Books')">Books</button>
+    </div>
+
+    <div class="container"><div class="product-grid" id="productGrid"></div></div>
+    <div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
+    <div class="notification" id="notification">Action Successful</div>
+    
+    <div class="modal" id="loginModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('loginModal')">&times;</span><h2>Admin Access</h2><p>Enter Password</p><input type="password" id="adminPassword" placeholder="Password"><button class="action-btn" onclick="checkPassword()">Login</button></div></div>
+    
+    <div class="modal" id="adminPanelModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('adminPanelModal')">&times;</span><h2>Admin Dashboard</h2>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('add')">Add Product</button>
+            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('orders')">Orders</button>
+            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
+        </div>
+        <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
+        <div id="ordersTab" style="display: none;"><h3>Recent Orders</h3><div id="ordersList" style="margin-top:10px;"></div></div>
+        <div id="deleteTab" style="display: none;"><h3>Delete Products</h3><div id="deleteList" style="margin-top:10px;"></div></div>
+    </div></div>
+    
+    <div class="modal" id="buyModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('buyModal')">&times;</span><h2>Checkout</h2><p id="buyProductName" style="font-weight: bold; margin-bottom: 10px;"></p><input type="text" id="custName" placeholder="Your Name"><input type="text" id="custMobile" placeholder="Mobile Number"><textarea id="custAddress" placeholder="Delivery Address"></textarea><button class="action-btn" onclick="placeOrder()">Confirm Order</button></div></div>
+
+    <script>
+        const initialProducts = [
+            { id: 1, name: "Wireless Headphones", price: 999, category: "Electronics", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, name: "Running Shoes", price: 1499, category: "Fashion", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, name: "Smart Watch", price: 2499, category: "Electronics", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60" },
+            { id: 4, name: "Cotton T-Shirt", price: 499, category: "Fashion", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&auto=format&fit=crop&q=60" },
+            { id: 5, name: "Face Cream", price: 350, category: "Beauty", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60" },
+            { id: 6, name: "Cricket Bat", price: 1200, category: "Sports", image: "https://images.unsplash.com/photo-1593786481097-02288830224e?w=500&auto=format&fit=crop&q=60" }
+        ];
+        
+        let products = JSON.parse(localStorage.getItem('rebelProducts')) || initialProducts;
+        let orders = JSON.parse(localStorage.getItem('rebelOrders')) || [];
+        let currentCategory = 'all'; 
+
+        function renderProducts(filter = 'all', searchTerm = '') {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            if(searchTerm) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+            if(filtered.length === 0) { grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">No products found.</p>'; return; }
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `<img src="${product.image}" alt="${product.name}" class="product-img" onerror="this.src='https://via.placeholder.com/150'"><div class="product-info"><div class="product-title">${product.name}</div><div class="product-price">₹${product.price}</div><button class="buy-btn" onclick="openBuyModal(${product.id})">Buy Now</button></div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterProducts(category) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const searchVal = document.getElementById('searchBar').value;
+            renderProducts(category, searchVal);
+        }
+
+        function searchProducts() {
+            const term = document.getElementById('searchBar').value;
+            renderProducts(currentCategory, term);
+        }
+
+        function openAdminLogin() { document.getElementById('loginModal').style.display = 'flex'; }
+        function checkPassword() {
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === 'sitaram') { closeModal('loginModal'); document.getElementById('adminPanelModal').style.display = 'flex'; showAdminTab('add'); }
+            else { alert('Wrong Password! Try: again'); }
+        }
+        function showAdminTab(tabName) {
+            document.getElementById('addTab').style.display = 'none';
+            document.getElementById('ordersTab').style.display = 'none';
+            document.getElementById('deleteTab').style.display = 'none';
+            if(tabName === 'add') { document.getElementById('addTab').style.display = 'block'; }
+            else if(tabName === 'orders') { document.getElementById('ordersTab').style.display = 'block'; renderOrders(); }
+            else if(tabName === 'delete') { document.getElementById('deleteTab').style.display = 'block'; renderDeleteList(); }
+        }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+
+        function addProduct() {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const image = document.getElementById('pImage').value;
+            const category = document.getElementById('pCategory').value;
+            if(!name || !price || !image) { alert("Please fill all details"); return; }
+            const newProduct = { id: Date.now(), name: name, price: price, category: category, image: image };
+            products.push(newProduct);
+            localStorage.setItem('rebelProducts', JSON.stringify(products));
+            document.getElementById('pName').value = ''; document.getElementById('pPrice').value = ''; document.getElementById('pImage').value = '';
+            closeModal('adminPanelModal'); renderProducts('all'); showNotification("Product Added!");
+        }
+
+        function renderDeleteList() {
+            const list = document.getElementById('deleteList');
+            list.innerHTML = '';
+            products.forEach(product => {
+                const div = document.createElement('div');
+                div.style.borderBottom = '1px solid #eee'; div.style.padding = '10px 0';
+                div.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div><strong>${product.name}</strong> - ₹${product.price}</div><button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button></div>`;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteProduct(id) {
+            if(confirm('Delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('OmLuxoraProducts', JSON.stringify(products));
+                renderDeleteList(); renderProducts('all'); showNotification("Product Deleted!");
+            }
+        }
+
+        function renderOrders() {
+            const list = document.getElementById('ordersList');
+            list.innerHTML = '';
+            if(orders.length === 0) { list.innerHTML = '<p>No orders yet.</p>'; return; }
+            orders.forEach(order => {
+                const div = document.createElement('div');
+                div.style.borderBottom = '1px solid #eee'; div.style.padding = '10px 0';
+                div.innerHTML = `<div><strong>${order.productName}</strong><br><small>Name: ${order.name}</small><br><small>Mobile: ${order.mobile}</small><br><small>Address: ${order.address}</small></div>`;
+                list.appendChild(div);
+            });
+        }
+
+        // --- FIX STARTED HERE ---
+        function openBuyModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if(product) {
+                document.getElementById('buyProductName').innerText = product.name;
+                // Yeh line add ki hai taaki ID save ho jaye
+                document.getElementById('buyModal').setAttribute('data-product-id', productId);
+                document.getElementById('buyModal').style.display = 'flex';
+            }
+        }
+        // --- FIX ENDED HERE ---
+
+        function placeOrder() {
+            const name = document.getElementById('custName').value;
+            const mobile = document.getElementById('custMobile').value;
+            const address = document.getElementById('custAddress').value;
+            // Ab yeh ID sahi se mil jayegi
+            const productId = document.getElementById('buyModal').getAttribute('data-product-id');
+            
+            if(!name || !mobile || !address) { alert("Please fill all details"); return; }
+            
+            const product = products.find(p => p.id == productId);
+            if(!product) { alert("Product not found"); return; }
+
+            const newOrder = { id: Date.now(), productId: productId, productName: product.name, price: product.price, name: name, mobile: mobile, address: address, date: new Date().toLocaleString() };
+            orders.push(newOrder);
+            localStorage.setItem('OmLuxora', JSON.stringify(orders));
+            document.getElementById('custName').value = ''; document.getElementById('custMobile').value = ''; document.getElementById('custAddress').value = '';
+            closeModal('buyModal'); showNotification("Order Placed!");
+        }
+
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.innerText = message; notif.style.display = 'block';
+            setTimeout(() => { notif.style.display = 'none'; }, 3000);
+        }
+
+        renderProducts();
+    </script>
 </body>
 </html>
