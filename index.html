@@ -7,7 +7,6 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta http-equiv="refresh" content="300">
     <style>
         :root { --primary: #ff5722; --dark: #333; --light: #f4f4f4; --white: #fff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -81,10 +80,11 @@
             <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('orders')">Orders</button>
             <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
         </div>
-        <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
+         <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Mens">Mens</option><option value="Womens">Womens</option><option value="Jewellery">Jewellery</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
         <div id="ordersTab" style="display: none;"><h3>Recent Orders</h3><div id="ordersList" style="margin-top:10px;"></div></div>
         <div id="deleteTab" style="display: none;"><h3>Delete Products</h3><div id="deleteList" style="margin-top:10px;"></div></div>
     </div></div>
+
     
     <div class="modal" id="buyModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('buyModal')">&times;</span><h2>Checkout</h2><p id="buyProductName" style="font-weight: bold; margin-bottom: 10px;"></p><input type="text" id="custName" placeholder="Your Name"><input type="text" id="custMobile" placeholder="Mobile Number"><textarea id="custAddress" placeholder="Delivery Address"></textarea><button class="action-btn" onclick="placeOrder()">Confirm Order</button></div></div>
 
@@ -92,10 +92,7 @@
         const initialProducts = [
             { id: 1, name: "Wireless Headphones", price: 999, category: "Electronics", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60" },
             { id: 2, name: "Running Shoes", price: 1499, category: "Fashion", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" },
-            { id: 3, name: "Smart Watch", price: 2499, category: "Electronics", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60" },
-            { id: 4, name: "Cotton T-Shirt", price: 499, category: "Fashion", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&auto=format&fit=crop&q=60" },
-            { id: 5, name: "Face Cream", price: 350, category: "Beauty", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60" },
-            { id: 6, name: "Cricket Bat", price: 1200, category: "Sports", image: "https://images.unsplash.com/photo-1593786481097-02288830224e?w=500&auto=format&fit=crop&q=60" }
+          
         ];
         
         let products = JSON.parse(localStorage.getItem('rebelProducts')) || initialProducts;
