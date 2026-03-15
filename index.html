@@ -89,6 +89,7 @@
     <div class="modal" id="buyModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('buyModal')">&times;</span><h2>Checkout</h2><p id="buyProductName" style="font-weight: bold; margin-bottom: 10px;"></p><input type="text" id="custName" placeholder="Your Name"><input type="text" id="custMobile" placeholder="Mobile Number"><textarea id="custAddress" placeholder="Delivery Address"></textarea><button class="action-btn" onclick="placeOrder()">Confirm Order</button></div></div>
 
     <script>
+        localStorage.clear();
         const initialProducts = [
             { id: 1, name: "Wireless Headphones", price: 999, category: "Electronics", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60" },
             { id: 2, name: "Running Shoes", price: 1499, category: "Fashion", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" },
