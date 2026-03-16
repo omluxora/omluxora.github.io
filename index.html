@@ -59,6 +59,7 @@
         <button class="cat-btn" onclick="filterProducts('Electronics')">Electronics</button>
         <button class="cat-btn" onclick="filterProducts('Fashion')">Fashion</button>
         <button class="cat-btn" onclick="filterProducts('Mens')">Mens</button>
+        <button class="cat-btn" onclick="filterProducts('Shoes')">Shoes</button>
         <button class="cat-btn" onclick="filterProducts('Womens')">Womens</button>
         <button class="cat-btn" onclick="filterProducts('Jewellery')">Jewellery</button>
         <button class="cat-btn" onclick="filterProducts('Home')">Home</button>
@@ -80,7 +81,7 @@
             <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('orders')">Orders</button>
             <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
         </div>
-         <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Mens">Mens</option><option value="Womens">Womens</option><option value="Jewellery">Jewellery</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
+         <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Mens">Mens</option><option value="Shoes">Shoes</option><option value="Womens">Womens</option><option value="Jewellery">Jewellery</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
         <div id="ordersTab" style="display: none;"><h3>Recent Orders</h3><div id="ordersList" style="margin-top:10px;"></div></div>
         <div id="deleteTab" style="display: none;"><h3>Delete Products</h3><div id="deleteList" style="margin-top:10px;"></div></div>
     </div></div>
