@@ -1,239 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmLuxora </title>
-    <style>
-        :root { --primary: #ff5722; --dark: #333; --light: #f4f4f4; --white: #fff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--light); padding-bottom: 50px; }
-        header { background-color: var(--primary); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px;}
-        .logo { font-size: 1.5rem; font-weight: bold; }
-        .search-container { flex-grow: 1; max-width: 400px; margin: 0 15px; }
-        .search-input { width: 100%; padding: 8px 15px; border-radius: 20px; border: none; outline: none; }
-        .cart-icon { font-size: 1.2rem; }
-        .hero { background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); padding: 40px 20px; text-align: center; margin-bottom: 20px; }
-        .hero h1 { color: var(--dark); margin-bottom: 10px; }
-        .categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding: 0 10px; }
-        .cat-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .product-card { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .product-img { width: 100%; height: 180px; object-fit: cover; background-color: #eee; }
-        .product-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
-        .product-title { font-size: 0.9rem; margin-bottom: 5px; color: var(--dark); }
-        .product-price { font-weight: bold; color: var(--primary); font-size: 1.1rem; margin-bottom: 10px; }
-        .buy-btn { margin-top: auto; background: var(--primary); color: var(--white); border: none; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; }
-        .admin-trigger { text-align: center; margin-top: 50px; font-size: 2rem; color: #ccc; cursor: pointer; padding: 20px; }
-        .admin-trigger:hover { color: var(--primary); transform: scale(1.2); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--white); padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
-        .action-btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .delete-btn { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
-        .complete-btn { background: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
-        .notification { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 2000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmLuxora Permanent</title>
+<style>
+:root { --primary: #ff5722; --dark: #333; --light: #f4f4f4; --white: #fff; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: var(--light); padding-bottom: 50px; }
+header { background-color: var(--primary); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px;}
+.logo { font-size: 1.5rem; font-weight: bold; }
+.search-container { flex-grow: 1; max-width: 400px; margin: 0 15px; }
+.search-input { width: 100%; padding: 8px 15px; border-radius: 20px; border: none; outline: none; }
+.cart-icon { font-size: 1.2rem; }
+.hero { background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); padding: 40px 20px; text-align: center; margin-bottom: 20px; }
+.hero h1 { color: var(--dark); margin-bottom: 10px; }
+.categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding: 0 10px; }
+.cat-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+.cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+.product-card { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.product-img { width: 100%; height: 180px; object-fit: cover; background-color: #eee; }
+.product-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+.product-title { font-size: 0.9rem; margin-bottom: 5px; color: var(--dark); }
+.product-price { font-weight: bold; color: var(--primary); font-size: 1.1rem; margin-bottom: 10px; }
+.buy-btn { margin-top: auto; background: var(--primary); color: var(--white); border: none; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; }
+.admin-trigger { text-align: center; margin-top: 50px; font-size: 2rem; color: #ccc; cursor: pointer; padding: 20px; }
+.admin-trigger:hover { color: var(--primary); transform: scale(1.2); }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { background: var(--white); padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; }
+.close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
+input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
+.action-btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+.delete-btn { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+.notification { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 2000; }
+</style>
 </head>
 <body>
-    <header>
-        <div class="logo">OmLuxora</div>
-        <div class="search-container">
-            <input type="text" id="searchBar" class="search-input" placeholder="Search products..." onkeyup="searchProducts()">
-        </div>
-        <div class="cart-icon">🛒 Cart (0)</div>
-    </header>
-    <div style="max-width:1200px;margin:20px auto;padding:0 15px;">
-<img src="abc.png" style="width:100%;border-radius:10px;">
+<header>
+<div class="logo">OmLuxora</div>
+<div class="search-container">
+<input type="text" id="searchBar" class="search-input" placeholder="Search products..." onkeyup="searchProducts()">
 </div>
-    <div class="hero"><h1>Welcome to OmLuxora</h1><p>Best Deals, Best Prices</p></div>
-    
-    <div class="categories" id="categoryContainer">
-       <button class="cat-btn active" onclick="filterProducts('all')">All</button>
-        <button class="cat-btn" onclick="filterProducts('Electronics')">Electronics</button>
-        <button class="cat-btn" onclick="filterProducts('Fashion')">Fashion</button>
-        <button class="cat-btn" onclick="filterProducts('Mens')">Mens</button>
-        <button class="cat-btn" onclick="filterProducts('Shoes')">Shoes</button>
-        <button class="cat-btn" onclick="filterProducts('Womens')">Womens</button>
-        <button class="cat-btn" onclick="filterProducts('Jewellery')">Jewellery</button>
-        <button class="cat-btn" onclick="filterProducts('Home')">Home</button>
-        <button class="cat-btn" onclick="filterProducts('Beauty')">Beauty</button>
-        <button class="cat-btn" onclick="filterProducts('Sports')">Sports</button>
-        <button class="cat-btn" onclick="filterProducts('Toys')">Toys</button>
-        <button class="cat-btn" onclick="filterProducts('Books')">Books</button>
-    </div>
+<div class="cart-icon">🛒 Cart (0)</div>
+</header>
+<img src="abc.png" style="width:100%;border-radius:10px;">
+<div class="hero"><h1>Welcome to OmLuxora</h1><p>Best Deals, Best Prices</p></div>
+<div class="categories" id="categoryContainer">
+<button class="cat-btn active" onclick="filterProducts('all')">All</button>
+<button class="cat-btn" onclick="filterProducts('Electronics')">Electronics</button>
+<button class="cat-btn" onclick="filterProducts('Fashion')">Fashion</button>
+<button class="cat-btn" onclick="filterProducts('Mens')">Mens</button>
+<button class="cat-btn" onclick="filterProducts('Shoes')">Shoes</button>
+<button class="cat-btn" onclick="filterProducts('Womens')">Womens</button>
+<button class="cat-btn" onclick="filterProducts('Jewellery')">Jewellery</button>
+<button class="cat-btn" onclick="filterProducts('Home')">Home</button>
+<button class="cat-btn" onclick="filterProducts('Beauty')">Beauty</button>
+<button class="cat-btn" onclick="filterProducts('Sports')">Sports</button>
+<button class="cat-btn" onclick="filterProducts('Toys')">Toys</button>
+<button class="cat-btn" onclick="filterProducts('Books')">Books</button>
+</div>
 
-    <div class="container"><div class="product-grid" id="productGrid"></div></div>
-    <div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
-    <div class="notification" id="notification">Action Successful</div>
-    
-    <div class="modal" id="loginModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('loginModal')">&times;</span><h2>Admin Access</h2><p>Enter Password</p><input type="password" id="adminPassword" placeholder="Password"><button class="action-btn" onclick="checkPassword()">Login</button></div></div>
-    
-    <div class="modal" id="adminPanelModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('adminPanelModal')">&times;</span><h2>Admin Dashboard</h2>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('add')">Add Product</button>
-            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('orders')">Orders</button>
-            <button class="action-btn" style="margin:0; flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
-        </div>
-         <div id="addTab"><h3>Add New Product</h3><input type="text" id="pName" placeholder="Product Name"><input type="number" id="pPrice" placeholder="Price (₹)"><input type="text" id="pImage" placeholder="Image URL (https://...)"><select id="pCategory"><option value="Electronics">Electronics</option><option value="Mens">Mens</option><option value="Shoes">Shoes</option><option value="Womens">Womens</option><option value="Jewellery">Jewellery</option><option value="Fashion">Fashion</option><option value="Home">Home</option><option value="Beauty">Beauty</option><option value="Sports">Sports</option><option value="Toys">Toys</option><option value="Books">Books</option></select><button class="action-btn" onclick="addProduct()">Add Product</button></div>
-        <div id="ordersTab" style="display: none;"><h3>Recent Orders</h3><div id="ordersList" style="margin-top:10px;"></div></div>
-        <div id="deleteTab" style="display: none;"><h3>Delete Products</h3><div id="deleteList" style="margin-top:10px;"></div></div>
-    </div></div>
+<div class="container">
+<div class="product-grid" id="productGrid"></div>
+</div>
 
-    
-    <div class="modal" id="buyModal"><div class="modal-content"><span class="close-btn" onclick="closeModal('buyModal')">&times;</span><h2>Checkout</h2><p id="buyProductName" style="font-weight: bold; margin-bottom: 10px;"></p><input type="text" id="custName" placeholder="Your Name"><input type="text" id="custMobile" placeholder="Mobile Number"><textarea id="custAddress" placeholder="Delivery Address"></textarea><button class="action-btn" onclick="placeOrder()">Confirm Order</button></div></div>
+<div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
+<div class="notification" id="notification">Action Successful</div>
 
-    <script>
-        const initialProducts = [
-            { id: 1, name: "Wireless Headphones", price: 999, category: "Electronics", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60" },
-            { id: 2, name: "Running Shoes", price: 1499, category: "Fashion", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" },
-          
-        ];
-        
-        let products = JSON.parse(localStorage.getItem('OmluxoraProducts')) || initialProducts;
-        let orders = JSON.parse(localStorage.getItem('OmluxoraOrders')) || [];
-        let currentCategory = 'all'; 
+<!-- Admin Login -->
+<div class="modal" id="loginModal">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+<h2>Admin Access</h2>
+<input type="password" id="adminPassword" placeholder="Password">
+<button class="action-btn" onclick="checkPassword()">Login</button>
+</div>
+</div>
 
-        function renderProducts(filter = 'all', searchTerm = '') {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = '';
-            let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-            if(searchTerm) {
-                filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-            }
-            if(filtered.length === 0) { grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">No products found.</p>'; return; }
-            filtered.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `<img src="${product.image}" alt="${product.name}" class="product-img" onerror="this.src='https://via.placeholder.com/150'"><div class="product-info"><div class="product-title">${product.name}</div><div class="product-price">₹${product.price}</div><button class="buy-btn" onclick="openBuyModal(${product.id})">Buy Now</button></div>`;
-                grid.appendChild(card);
-            });
-        }
+<!-- Admin Panel -->
+<div class="modal" id="adminPanelModal">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal('adminPanelModal')">&times;</span>
+<h2>Admin Dashboard</h2>
+<div style="display:flex;gap:10px;margin-bottom:15px;">
+<button class="action-btn" style="flex:1;" onclick="showAdminTab('add')">Add Product</button>
+<button class="action-btn" style="flex:1;" onclick="showAdminTab('orders')">Orders</button>
+<button class="action-btn" style="flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
+</div>
 
-        function filterProducts(category) {
-            currentCategory = category;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            const searchVal = document.getElementById('searchBar').value;
-            renderProducts(category, searchVal);
-        }
+<div id="addTab">
+<input type="text" id="pName" placeholder="Product Name">
+<input type="number" id="pPrice" placeholder="Price (₹)">
+<input type="text" id="pImage" placeholder="Image URL">
+<select id="pCategory">
+<option value="Electronics">Electronics</option>
+<option value="Fashion">Fashion</option>
+<option value="Mens">Mens</option>
+<option value="Shoes">Shoes</option>
+<option value="Womens">Womens</option>
+<option value="Jewellery">Jewellery</option>
+<option value="Home">Home</option>
+<option value="Beauty">Beauty</option>
+<option value="Sports">Sports</option>
+<option value="Toys">Toys</option>
+<option value="Books">Books</option>
+</select>
+<button class="action-btn" onclick="addProduct()">Add Product</button>
+</div>
 
-        function searchProducts() {
-            const term = document.getElementById('searchBar').value;
-            renderProducts(currentCategory, term);
-        }
+<div id="deleteTab" style="display:none;">
+<div id="deleteList" style="margin-top:10px;"></div>
+</div>
 
-        function openAdminLogin() { document.getElementById('loginModal').style.display = 'flex'; }
-        function checkPassword() {
-            const pass = document.getElementById('adminPassword').value;
-            if (pass === 'sitaram') { closeModal('loginModal'); document.getElementById('adminPanelModal').style.display = 'flex'; showAdminTab('add'); }
-            else { alert('Wrong Password! Try: again'); }
-        }
-        function showAdminTab(tabName) {
-            document.getElementById('addTab').style.display = 'none';
-            document.getElementById('ordersTab').style.display = 'none';
-            document.getElementById('deleteTab').style.display = 'none';
-            if(tabName === 'add') { document.getElementById('addTab').style.display = 'block'; }
-            else if(tabName === 'orders') { document.getElementById('ordersTab').style.display = 'block'; renderOrders(); }
-            else if(tabName === 'delete') { document.getElementById('deleteTab').style.display = 'block'; renderDeleteList(); }
-        }
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+<div id="ordersTab" style="display:none;">
+<div id="ordersList" style="margin-top:10px;"></div>
+</div>
 
-        function addProduct() {
-            const name = document.getElementById('pName').value;
-            const price = document.getElementById('pPrice').value;
-            const image = document.getElementById('pImage').value;
-            const category = document.getElementById('pCategory').value;
-            if(!name || !price || !image) { alert("Please fill all details"); return; }
-            const newProduct = { id: Date.now(), name: name, price: price, category: category, image: image };
-            products.push(newProduct);
-            localStorage.setItem('omluxora', JSON.stringify(products));
-            document.getElementById('pName').value = ''; document.getElementById('pPrice').value = ''; document.getElementById('pImage').value = '';
-            closeModal('adminPanelModal'); renderProducts('all'); showNotification("Product Added!");
-        }
+</div>
+</div>
 
-        function renderDeleteList() {
-            const list = document.getElementById('deleteList');
-            list.innerHTML = '';
-            products.forEach(product => {
-                const div = document.createElement('div');
-                div.style.borderBottom = '1px solid #eee'; div.style.padding = '10px 0';
-                div.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div><strong>${product.name}</strong> - ₹${product.price}</div><button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button></div>`;
-                list.appendChild(div);
-            });
-        }
+<!-- Buy Modal -->
+<div class="modal" id="buyModal">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal('buyModal')">&times;</span>
+<p id="buyProductName" style="font-weight:bold;margin-bottom:10px;"></p>
+<input type="text" id="custName" placeholder="Your Name">
+<input type="text" id="custMobile" placeholder="Mobile Number">
+<textarea id="custAddress" placeholder="Delivery Address"></textarea>
+<button class="action-btn" onclick="placeOrder()">Confirm Order</button>
+</div>
+</div>
 
-     function deleteProduct(id) {
-    if (confirm('Delete this product?')) {
-        products = products.filter(function(p) {
-            return p.id !== id;
-        });
+<script>
+let jsonProducts = [
+  {id:1,name:"Wireless Headphones",price:999,category:"Electronics",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"},
+  {id:2,name:"Running Shoes",price:1499,category:"Fashion",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60"}
+  // यहाँ 500+ products JSON में रख सकते हो
+];
 
-        localStorage.setItem('OmluxoraProducts', JSON.stringify(products));
+let localProducts = JSON.parse(localStorage.getItem('OmLuxoraProducts'))||[];
+let products = [...jsonProducts, ...localProducts];
+let orders = JSON.parse(localStorage.getItem('OmLuxoraOrders'))||[];
+let currentCategory='all';
 
-        renderDeleteList();
-        renderProducts();
+function renderProducts(filter=currentCategory,searchTerm=document.getElementById('searchBar').value){
+let grid=document.getElementById('productGrid');grid.innerHTML='';
+let filtered = filter==='all'?products:products.filter(p=>p.category===filter);
+if(searchTerm) filtered=filtered.filter(p=>p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+if(filtered.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';return;}
+filtered.forEach(p=>{
+let card=document.createElement('div');card.className='product-card';
+card.innerHTML=`<img src="${p.image}" class="product-img" onerror="this.src='https://via.placeholder.com/150'"><div class="product-info"><div class="product-title">${p.name}</div><div class="product-price">₹${p.price}</div><button class="buy-btn" onclick="openBuyModal(${p.id})">Buy Now</button></div>`;
+grid.appendChild(card);
+});
+}
 
-        showNotification("Product Deleted!");
-            }
-        }
+function filterProducts(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
+function searchProducts(){renderProducts();}
 
-        function renderOrders() {
-            const list = document.getElementById('ordersList');
-            list.innerHTML = '';
-            if(orders.length === 0) { list.innerHTML = '<p>No orders yet.</p>'; return; }
-            orders.forEach(order => {
-                const div = document.createElement('div');
-                div.style.borderBottom = '1px solid #eee'; div.style.padding = '10px 0';
-                div.innerHTML = `<div><strong>${order.productName}</strong><br><small>Name: ${order.name}</small><br><small>Mobile: ${order.mobile}</small><br><small>Address: ${order.address}</small></div>`;
-                list.appendChild(div);
-            });
-        }
+function openAdminLogin(){document.getElementById('loginModal').style.display='flex';}
+function checkPassword(){if(document.getElementById('adminPassword').value==='sitaram'){closeModal('loginModal');document.getElementById('adminPanelModal').style.display='flex';showAdminTab('add');}else alert('Wrong Password');}
+function showAdminTab(tab){document.getElementById('addTab').style.display='none';document.getElementById('deleteTab').style.display='none';document.getElementById('ordersTab').style.display='none';if(tab==='add')document.getElementById('addTab').style.display='block';else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}else if(tab==='orders'){document.getElementById('ordersTab').style.display='block';renderOrders();}}
+function closeModal(id){document.getElementById(id).style.display='none';}
 
-        // --- FIX STARTED HERE ---
-        function openBuyModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if(product) {
-                document.getElementById('buyProductName').innerText = product.name;
-                // Yeh line add ki hai taaki ID save ho jaye
-                document.getElementById('buyModal').setAttribute('data-product-id', productId);
-                document.getElementById('buyModal').style.display = 'flex';
-            }
-        }
-        // --- FIX ENDED HERE ---
+function addProduct(){
+let name=document.getElementById('pName').value;
+let price=document.getElementById('pPrice').value;
+let image=document.getElementById('pImage').value;
+let category=document.getElementById('pCategory').value;
+if(!name||!price||!image){alert("Fill all details");return;}
+let newP={id:Date.now(),name,price,category,image};
+products.push(newP);
+localProducts.push(newP);
+localStorage.setItem('OmLuxoraProducts',JSON.stringify(localProducts));
+renderProducts();
+renderDeleteList();
+showNotification('Product Added!');
+}
 
-        function placeOrder() {
-            const name = document.getElementById('custName').value;
-            const mobile = document.getElementById('custMobile').value;
-            const address = document.getElementById('custAddress').value;
-            // Ab yeh ID sahi se mil jayegi
-            const productId = document.getElementById('buyModal').getAttribute('data-product-id');
-            
-            if(!name || !mobile || !address) { alert("Please fill all details"); return; }
-            
-            const product = products.find(p => p.id == productId);
-            if(!product) { alert("Product not found"); return; }
+function renderDeleteList(){let list=document.getElementById('deleteList');list.innerHTML='';products.forEach(p=>{let div=document.createElement('div');div.style.borderBottom='1px solid #eee';div.style.padding='10px 0';div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${p.name}</strong> - ₹${p.price}</div><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></div>`;list.appendChild(div);});}
+function deleteProduct(id){if(confirm('Delete this product?')){products=products.filter(p=>p.id!==id);localProducts=localProducts.filter(p=>p.id!==id);localStorage.setItem('OmLuxoraProducts',JSON.stringify(localProducts));renderProducts();renderDeleteList();showNotification('Product Deleted!');}}
 
-            const newOrder = { id: Date.now(), productId: productId, productName: product.name, price: product.price, name: name, mobile: mobile, address: address, date: new Date().toLocaleString() };
-            orders.push(newOrder);
-            localStorage.setItem('OmLuxora', JSON.stringify(orders));
-            document.getElementById('custName').value = ''; document.getElementById('custMobile').value = ''; document.getElementById('custAddress').value = '';
-            closeModal('buyModal'); showNotification("Order Placed!");
-        }
+function openBuyModal(id){const p=products.find(x=>x.id===id);if(!p)return;document.getElementById('buyProductName').innerText=p.name;document.getElementById('buyModal').setAttribute('data-product-id',id);document.getElementById('buyModal').style.display='flex';}
+function placeOrder(){let name=document.getElementById('custName').value;let mobile=document.getElementById('custMobile').value;let address=document.getElementById('custAddress').value;let pid=document.getElementById('buyModal').getAttribute('data-product-id');if(!name||!mobile||!address){alert('Fill all details');return;}let p=products.find(x=>x.id==pid);if(!p){alert('Product not found');return;}let newO={id:Date.now(),productId:pid,productName:p.name,price:p.price,name,mobile,address,date:new Date().toLocaleString()};orders.push(newO);localStorage.setItem('OmLuxoraOrders',JSON.stringify(orders));closeModal('buyModal');showNotification('Order Placed!');}
 
-        function showNotification(message) {
-            const notif = document.getElementById('notification');
-            notif.innerText = message; notif.style.display = 'block';
-            setTimeout(() => { notif.style.display = 'none'; }, 3000);
-        }
+function renderOrders(){let list=document.getElementById('ordersList');list.innerHTML='';if(orders.length===0){list.innerHTML='<p>No orders yet.</p>';return;}orders.forEach(o=>{let div=document.createElement('div');div.style.borderBottom='1px solid #eee';div.style.padding='10px 0';div.innerHTML=`<div><strong>${o.productName}</strong><br><small>Name:${o.name}</small><br><small>Mobile:${o.mobile}</small><br><small>Address:${o.address}</small></div>`;list.appendChild(div);});}
 
-        renderProducts();
-    </script>
+function showNotification(msg){const n=document.getElementById('notification');n.innerText=msg;n.style.display='block';setTimeout(()=>{n.style.display='none';},3000);}
+
+renderProducts();
+</script>
 </body>
 </html>
