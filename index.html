@@ -64,14 +64,11 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="cat-btn" onclick="filterProducts('Toys')">Toys</button>
 <button class="cat-btn" onclick="filterProducts('Books')">Books</button>
 </div>
-
 <div class="container">
 <div class="product-grid" id="productGrid"></div>
 </div>
-
 <div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
 <div class="notification" id="notification">Action Successful</div>
-
 <!-- Admin Login -->
 <div class="modal" id="loginModal">
 <div class="modal-content">
@@ -81,7 +78,6 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" onclick="checkPassword()">Login</button>
 </div>
 </div>
-
 <!-- Admin Panel -->
 <div class="modal" id="adminPanelModal">
 <div class="modal-content">
@@ -92,7 +88,6 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" style="flex:1;" onclick="showAdminTab('orders')">Orders</button>
 <button class="action-btn" style="flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
 </div>
-
 <div id="addTab">
 <input type="text" id="pName" placeholder="Product Name">
 <input type="number" id="pPrice" placeholder="Price (₹)">
@@ -135,65 +130,152 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" onclick="placeOrder()">Confirm Order</button>
 </div>
 </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script>
-let jsonProducts = [
-  {id:1,name:"Wireless Headphones",price:999,category:"Electronics",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"},
-  {id:2,name:"Running Shoes",price:1499,category:"Fashion",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60"}
-  // यहाँ 500+ products JSON में रख सकते हो
-];
+// 🔑 APNA FIREBASE CONFIG YAHA DAAL
+const firebaseConfig = {
+  apiKey: "XXXX",
+  authDomain: "XXXX",
+  projectId: "XXXX",
+  storageBucket: "XXXX",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
 
-let localProducts = JSON.parse(localStorage.getItem('OmLuxoraProducts'))||[];
-let products = [...jsonProducts, ...localProducts];
-let orders = JSON.parse(localStorage.getItem('OmLuxoraOrders'))||[];
-let currentCategory='all';
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-function renderProducts(filter=currentCategory,searchTerm=document.getElementById('searchBar').value){
-let grid=document.getElementById('productGrid');grid.innerHTML='';
-let filtered = filter==='all'?products:products.filter(p=>p.category===filter);
-if(searchTerm) filtered=filtered.filter(p=>p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-if(filtered.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';return;}
-filtered.forEach(p=>{
-let card=document.createElement('div');card.className='product-card';
-card.innerHTML=`<img src="${p.image}" class="product-img" onerror="this.src='https://via.placeholder.com/150'"><div class="product-info"><div class="product-title">${p.name}</div><div class="product-price">₹${p.price}</div><button class="buy-btn" onclick="openBuyModal(${p.id})">Buy Now</button></div>`;
-grid.appendChild(card);
-});
+let products = [];
+let orders = [];
+let currentCategory = 'all';
+
+// 🔥 LOAD PRODUCTS FROM FIREBASE
+async function loadProducts() {
+  products = [];
+  const querySnapshot = await getDocs(collection(db, "products"));
+
+  querySnapshot.forEach((docSnap) => {
+    let p = docSnap.data();
+    p.id = docSnap.id;
+    products.push(p);
+  });
+
+  renderProducts();
+  renderDeleteList();
 }
 
-function filterProducts(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
-function searchProducts(){renderProducts();}
+// 🔥 ADD PRODUCT (ADMIN)
+window.addProduct = async function () {
+  let name = document.getElementById('pName').value;
+  let price = document.getElementById('pPrice').value;
+  let image = document.getElementById('pImage').value;
+  let category = document.getElementById('pCategory').value;
 
-function openAdminLogin(){document.getElementById('loginModal').style.display='flex';}
-function checkPassword(){if(document.getElementById('adminPassword').value==='sitaram'){closeModal('loginModal');document.getElementById('adminPanelModal').style.display='flex';showAdminTab('add');}else alert('Wrong Password');}
-function showAdminTab(tab){document.getElementById('addTab').style.display='none';document.getElementById('deleteTab').style.display='none';document.getElementById('ordersTab').style.display='none';if(tab==='add')document.getElementById('addTab').style.display='block';else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}else if(tab==='orders'){document.getElementById('ordersTab').style.display='block';renderOrders();}}
-function closeModal(id){document.getElementById(id).style.display='none';}
+  if (!name || !price || !image) {
+    alert("Fill all details");
+    return;
+  }
 
-function addProduct(){
-let name=document.getElementById('pName').value;
-let price=document.getElementById('pPrice').value;
-let image=document.getElementById('pImage').value;
-let category=document.getElementById('pCategory').value;
-if(!name||!price||!image){alert("Fill all details");return;}
-let newP={id:Date.now(),name,price,category,image};
-products.push(newP);
-localProducts.push(newP);
-localStorage.setItem('OmLuxoraProducts',JSON.stringify(localProducts));
-renderProducts();
-renderDeleteList();
-showNotification('Product Added!');
-}
+  await addDoc(collection(db, "products"), {
+    name,
+    price,
+    image,
+    category
+  });
 
-function renderDeleteList(){let list=document.getElementById('deleteList');list.innerHTML='';products.forEach(p=>{let div=document.createElement('div');div.style.borderBottom='1px solid #eee';div.style.padding='10px 0';div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${p.name}</strong> - ₹${p.price}</div><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></div>`;list.appendChild(div);});}
-function deleteProduct(id){if(confirm('Delete this product?')){products=products.filter(p=>p.id!==id);localProducts=localProducts.filter(p=>p.id!==id);localStorage.setItem('OmLuxoraProducts',JSON.stringify(localProducts));renderProducts();renderDeleteList();showNotification('Product Deleted!');}}
+  showNotification('Product Added 🔥');
+  loadProducts();
+};
 
-function openBuyModal(id){const p=products.find(x=>x.id===id);if(!p)return;document.getElementById('buyProductName').innerText=p.name;document.getElementById('buyModal').setAttribute('data-product-id',id);document.getElementById('buyModal').style.display='flex';}
-function placeOrder(){let name=document.getElementById('custName').value;let mobile=document.getElementById('custMobile').value;let address=document.getElementById('custAddress').value;let pid=document.getElementById('buyModal').getAttribute('data-product-id');if(!name||!mobile||!address){alert('Fill all details');return;}let p=products.find(x=>x.id==pid);if(!p){alert('Product not found');return;}let newO={id:Date.now(),productId:pid,productName:p.name,price:p.price,name,mobile,address,date:new Date().toLocaleString()};orders.push(newO);localStorage.setItem('OmLuxoraOrders',JSON.stringify(orders));closeModal('buyModal');showNotification('Order Placed!');}
+// 🔥 DELETE PRODUCT
+window.deleteProduct = async function (id) {
+  if (confirm('Delete this product?')) {
+    await deleteDoc(doc(db, "products", id));
+    showNotification('Product Deleted!');
+    loadProducts();
+  }
+};
 
-function renderOrders(){let list=document.getElementById('ordersList');list.innerHTML='';if(orders.length===0){list.innerHTML='<p>No orders yet.</p>';return;}orders.forEach(o=>{let div=document.createElement('div');div.style.borderBottom='1px solid #eee';div.style.padding='10px 0';div.innerHTML=`<div><strong>${o.productName}</strong><br><small>Name:${o.name}</small><br><small>Mobile:${o.mobile}</small><br><small>Address:${o.address}</small></div>`;list.appendChild(div);});}
+// 🔥 RENDER PRODUCTS (same tera)
+window.renderProducts = function (filter = currentCategory, searchTerm = document.getElementById('searchBar').value) {
+  let grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
 
-function showNotification(msg){const n=document.getElementById('notification');n.innerText=msg;n.style.display='block';setTimeout(()=>{n.style.display='none';},3000);}
+  let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+  if (searchTerm) filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-renderProducts();
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';
+    return;
+  }
+
+  filtered.forEach(p => {
+    let card = document.createElement('div');
+    card.className = 'product-card';
+
+    card.innerHTML = `
+      <img src="${p.image}" class="product-img">
+      <div class="product-info">
+        <div class="product-title">${p.name}</div>
+        <div class="product-price">₹${p.price}</div>
+        <button class="buy-btn" onclick="openBuyModal('${p.id}')">Buy Now</button>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+};
+
+// बाकी functions same
+window.filterProducts = function(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
+window.searchProducts = function(){renderProducts();}
+window.openAdminLogin = function(){document.getElementById('loginModal').style.display='flex';}
+window.checkPassword = function(){if(document.getElementById('adminPassword').value==='sitaram'){closeModal('loginModal');document.getElementById('adminPanelModal').style.display='flex';showAdminTab('add');}else alert('Wrong Password');}
+window.showAdminTab = function(tab){document.getElementById('addTab').style.display='none';document.getElementById('deleteTab').style.display='none';document.getElementById('ordersTab').style.display='none';if(tab==='add')document.getElementById('addTab').style.display='block';else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}}
+window.closeModal = function(id){document.getElementById(id).style.display='none';}
+
+// DELETE LIST UI
+window.renderDeleteList = function(){
+  let list=document.getElementById('deleteList');
+  list.innerHTML='';
+  products.forEach(p=>{
+    let div=document.createElement('div');
+    div.innerHTML=`
+    <div style="display:flex;justify-content:space-between;">
+      <div>${p.name} - ₹${p.price}</div>
+      <button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button>
+    </div>`;
+    list.appendChild(div);
+  });
+};
+
+// BUY
+window.openBuyModal = function(id){
+  const p=products.find(x=>x.id==id);
+  document.getElementById('buyProductName').innerText=p.name;
+  document.getElementById('buyModal').setAttribute('data-product-id',id);
+  document.getElementById('buyModal').style.display='flex';
+};
+
+window.placeOrder = function(){
+  alert("Order Placed (demo)");
+  closeModal('buyModal');
+};
+
+// NOTIFICATION
+window.showNotification = function(msg){
+  const n=document.getElementById('notification');
+  n.innerText=msg;
+  n.style.display='block';
+  setTimeout(()=>{n.style.display='none';},3000);
+};
+
+// 🚀 LOAD ON START
+loadProducts();
+
 </script>
+
 </body>
 </html>
