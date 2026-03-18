@@ -69,6 +69,7 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 </div>
 <div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
 <div class="notification" id="notification">Action Successful</div>
+
 <!-- Admin Login -->
 <div class="modal" id="loginModal">
 <div class="modal-content">
@@ -78,6 +79,7 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" onclick="checkPassword()">Login</button>
 </div>
 </div>
+
 <!-- Admin Panel -->
 <div class="modal" id="adminPanelModal">
 <div class="modal-content">
@@ -130,92 +132,94 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" onclick="placeOrder()">Confirm Order</button>
 </div>
 </div>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔑 APNA FIREBASE CONFIG YAHA DAAL
-const firebaseConfig = {
-  apiKey: "XXXX",
-  authDomain: "XXXX",
-  projectId: "XXXX",
-  storageBucket: "XXXX",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+<!-- PARSE SDK -->
+<script src="https://unpkg.com/parse/dist/parse.min.js"></script>
+<script>
+// ✅ Parse Init
+Parse.initialize("2863mJqPkyc6TEj1q55nkv6hsXMcBDIri3pqhw2u", "wuBmIS393iffvQFsESP2qCaU1AKHz1CH10vgsj2b"); // App ID + JS Key
+Parse.serverURL = "https://parseapi.back4app.com";
 
 let products = [];
-let orders = [];
 let currentCategory = 'all';
 
-// 🔥 LOAD PRODUCTS FROM FIREBASE
+// 🔥 LOAD PRODUCTS
 async function loadProducts() {
-  products = [];
-  const querySnapshot = await getDocs(collection(db, "products"));
+  const Product = Parse.Object.extend("Products");
+  const query = new Parse.Query(Product);
 
-  querySnapshot.forEach((docSnap) => {
-    let p = docSnap.data();
-    p.id = docSnap.id;
-    products.push(p);
-  });
-
-  renderProducts();
-  renderDeleteList();
+  try {
+    const results = await query.find();
+    products = results.map(p => ({
+      id: p.id,
+      name: p.get("name"),
+      price: p.get("price"),
+      image: p.get("image"),
+      category: p.get("category")
+    }));
+    renderProducts();
+    renderDeleteList();
+  } catch (err) {
+    alert("Error: "+err.message);
+  }
 }
 
-// 🔥 ADD PRODUCT (ADMIN)
-window.addProduct = async function () {
+// 🔥 ADD PRODUCT (Admin Only) with ACL
+async function addProduct() {
   let name = document.getElementById('pName').value;
-  let price = document.getElementById('pPrice').value;
+  let price = Number(document.getElementById('pPrice').value);
   let image = document.getElementById('pImage').value;
   let category = document.getElementById('pCategory').value;
 
-  if (!name || !price || !image) {
-    alert("Fill all details");
-    return;
+  if (!name || !price || !image) { alert("Fill all details"); return; }
+
+  const Product = Parse.Object.extend("Products");
+  const product = new Product();
+  product.set("name", name);
+  product.set("price", price);
+  product.set("image", image);
+  product.set("category", category);
+
+  // ✅ ACL: Public read, write only admin
+  let acl = new Parse.ACL();
+  acl.setPublicReadAccess(true);
+  product.setACL(acl);
+
+  try {
+    await product.save();
+    showNotification("Product Added 🔥");
+    loadProducts();
+  } catch(err) {
+    alert("Error: "+err.message);
   }
-
-  await addDoc(collection(db, "products"), {
-    name,
-    price,
-    image,
-    category
-  });
-
-  showNotification('Product Added 🔥');
-  loadProducts();
-};
+}
 
 // 🔥 DELETE PRODUCT
-window.deleteProduct = async function (id) {
-  if (confirm('Delete this product?')) {
-    await deleteDoc(doc(db, "products", id));
-    showNotification('Product Deleted!');
-    loadProducts();
-  }
-};
+async function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  const Product = Parse.Object.extend("Products");
+  const query = new Parse.Query(Product);
 
-// 🔥 RENDER PRODUCTS (same tera)
-window.renderProducts = function (filter = currentCategory, searchTerm = document.getElementById('searchBar').value) {
+  try {
+    const p = await query.get(id);
+    await p.destroy();
+    showNotification("Product Deleted!");
+    loadProducts();
+  } catch(err) {
+    alert("Error: "+err.message);
+  }
+}
+
+// 🔥 RENDER PRODUCTS
+function renderProducts(filter=currentCategory, searchTerm=document.getElementById('searchBar').value) {
   let grid = document.getElementById('productGrid');
   grid.innerHTML = '';
-
-  let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-  if (searchTerm) filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';
-    return;
-  }
-
-  filtered.forEach(p => {
-    let card = document.createElement('div');
-    card.className = 'product-card';
-
-    card.innerHTML = `
+  let filtered = filter==='all'?products:products.filter(p=>p.category===filter);
+  if(searchTerm) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  if(filtered.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';return;}
+  filtered.forEach(p=>{
+    let card=document.createElement('div'); card.className='product-card';
+    card.innerHTML=`
       <img src="${p.image}" class="product-img">
       <div class="product-info">
         <div class="product-title">${p.name}</div>
@@ -223,59 +227,64 @@ window.renderProducts = function (filter = currentCategory, searchTerm = documen
         <button class="buy-btn" onclick="openBuyModal('${p.id}')">Buy Now</button>
       </div>
     `;
-
     grid.appendChild(card);
   });
-};
+}
 
-// बाकी functions same
-window.filterProducts = function(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
-window.searchProducts = function(){renderProducts();}
-window.openAdminLogin = function(){document.getElementById('loginModal').style.display='flex';}
-window.checkPassword = function(){if(document.getElementById('adminPassword').value==='sitaram'){closeModal('loginModal');document.getElementById('adminPanelModal').style.display='flex';showAdminTab('add');}else alert('Wrong Password');}
-window.showAdminTab = function(tab){document.getElementById('addTab').style.display='none';document.getElementById('deleteTab').style.display='none';document.getElementById('ordersTab').style.display='none';if(tab==='add')document.getElementById('addTab').style.display='block';else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}}
-window.closeModal = function(id){document.getElementById(id).style.display='none';}
+// FILTER & SEARCH
+function filterProducts(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
+function searchProducts(){renderProducts();}
 
-// DELETE LIST UI
-window.renderDeleteList = function(){
-  let list=document.getElementById('deleteList');
-  list.innerHTML='';
+// ADMIN LOGIN
+function openAdminLogin(){document.getElementById('loginModal').style.display='flex';}
+function checkPassword(){
+  if(document.getElementById('adminPassword').value==='sitaram'){
+    closeModal('loginModal');
+    document.getElementById('adminPanelModal').style.display='flex';
+    showAdminTab('add');
+  } else alert('Wrong Password');
+}
+function showAdminTab(tab){
+  document.getElementById('addTab').style.display='none';
+  document.getElementById('deleteTab').style.display='none';
+  document.getElementById('ordersTab').style.display='none';
+  if(tab==='add') document.getElementById('addTab').style.display='block';
+  else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}
+}
+function closeModal(id){document.getElementById(id).style.display='none';}
+
+// DELETE LIST
+function renderDeleteList(){
+  let list=document.getElementById('deleteList'); list.innerHTML='';
   products.forEach(p=>{
     let div=document.createElement('div');
     div.innerHTML=`
-    <div style="display:flex;justify-content:space-between;">
-      <div>${p.name} - ₹${p.price}</div>
-      <button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button>
-    </div>`;
+      <div style="display:flex;justify-content:space-between;">
+        <div>${p.name} - ₹${p.price}</div>
+        <button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button>
+      </div>
+    `;
     list.appendChild(div);
   });
-};
+}
 
 // BUY
-window.openBuyModal = function(id){
+function openBuyModal(id){
   const p=products.find(x=>x.id==id);
   document.getElementById('buyProductName').innerText=p.name;
   document.getElementById('buyModal').setAttribute('data-product-id',id);
   document.getElementById('buyModal').style.display='flex';
-};
-
-window.placeOrder = function(){
-  alert("Order Placed (demo)");
-  closeModal('buyModal');
-};
+}
+function placeOrder(){ alert("Order Placed (demo)"); closeModal('buyModal'); }
 
 // NOTIFICATION
-window.showNotification = function(msg){
-  const n=document.getElementById('notification');
-  n.innerText=msg;
-  n.style.display='block';
+function showNotification(msg){
+  const n=document.getElementById('notification'); n.innerText=msg; n.style.display='block';
   setTimeout(()=>{n.style.display='none';},3000);
-};
+}
 
-// 🚀 LOAD ON START
+// INIT
 loadProducts();
-
 </script>
-
 </body>
 </html>
