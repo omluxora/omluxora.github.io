@@ -143,7 +143,7 @@ Parse.serverURL = "https://parseapi.back4app.com";
 let products = [];
 let currentCategory = 'all';
 
-// 🔥 LOAD PRODUCTS
+// 🔥LOAD PRODUCTS
 async function loadProducts() {
   const Product = Parse.Object.extend("Products");
   const query = new Parse.Query(Product);
