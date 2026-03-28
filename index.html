@@ -38,6 +38,7 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 .action-btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
 .delete-btn { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
 .notification { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 2000; }
+.order-item { display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;}
 </style>
 </head>
 <body>
@@ -67,6 +68,7 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <div class="container">
 <div class="product-grid" id="productGrid"></div>
 </div>
+
 <div class="admin-trigger" onclick="openAdminLogin()">ॐ</div>
 <div class="notification" id="notification">Action Successful</div>
 
@@ -90,6 +92,7 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <button class="action-btn" style="flex:1;" onclick="showAdminTab('orders')">Orders</button>
 <button class="action-btn" style="flex:1;" onclick="showAdminTab('delete')">Delete Product</button>
 </div>
+
 <div id="addTab">
 <input type="text" id="pName" placeholder="Product Name">
 <input type="number" id="pPrice" placeholder="Price (₹)">
@@ -117,7 +120,6 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 <div id="ordersTab" style="display:none;">
 <div id="ordersList" style="margin-top:10px;"></div>
 </div>
-
 </div>
 </div>
 
@@ -133,38 +135,54 @@ input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px
 </div>
 </div>
 
-<!-- PARSE SDK -->
 <script src="https://unpkg.com/parse/dist/parse.min.js"></script>
 <script>
-// ✅ Parse Init
-Parse.initialize("2863mJqPkyc6TEj1q55nkv6hsXMcBDIri3pqhw2u", "wuBmIS393iffvQFsESP2qCaU1AKHz1CH10vgsj2b"); // App ID + JS Key
-Parse.serverURL = "https://parseapi.back4app.com";
+const APP_ID = "2863mJqPkyc6TEj1q55nkv6hsXMcBDIri3pqhw2u";
+const REST_KEY = "HqXtBo75Fw1LDONVsTGoZHS5dsIqjsyqBXctNNsK";
 
 let products = [];
 let currentCategory = 'all';
 
-// 🔥LOAD PRODUCTS
+// 🔥 SAFE LOAD (DOM READY)
+document.addEventListener("DOMContentLoaded", function () {
+  loadProducts();
+});
+
+// 🔥 LOAD PRODUCTS
 async function loadProducts() {
-  const Product = Parse.Object.extend("Products");
-  const query = new Parse.Query(Product);
+  const grid = document.getElementById('productGrid');
+  if (!grid) {
+    console.log("productGrid nahi mila");
+    return;
+  }
 
   try {
-    const results = await query.find();
-    products = results.map(p => ({
-      id: p.id,
-      name: p.get("name"),
-      price: p.get("price"),
-      image: p.get("image"),
-      category: p.get("category")
+    const res = await fetch("https://parseapi.back4app.com/classes/Products", {
+      headers: {
+        "X-Parse-Application-Id": APP_ID,
+        "X-Parse-REST-API-Key": REST_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    products = (data.results || []).map(p => ({
+      id: p.objectId,
+      name: p.name,
+      price: p.price,
+      image: p.image,
+      category: p.category
     }));
+
     renderProducts();
     renderDeleteList();
   } catch (err) {
-    alert("Error: "+err.message);
+    alert("Error: " + err.message);
   }
 }
 
-// 🔥  ADD PRODUCT (Admin Only) with ACL
+
+// ADD PRODUCT
 async function addProduct() {
   let name = document.getElementById('pName').value;
   let price = Number(document.getElementById('pPrice').value);
@@ -180,38 +198,29 @@ async function addProduct() {
   product.set("image", image);
   product.set("category", category);
 
-  // ✅ ACL: Public read, write only admin
   let acl = new Parse.ACL();
   acl.setPublicReadAccess(true);
   product.setACL(acl);
 
-  try {
-    await product.save();
-    showNotification("Product Added 🔥");
-    loadProducts();
-  } catch(err) {
-    alert("Error: "+err.message);
-  }
+  try { await product.save(); showNotification("Product Added 🔥"); loadProducts(); } 
+  catch(err){ alert("Error: "+err.message); }
 }
 
-// 🔥 DELETE PRODUCT
+// DELETE PRODUCT
 async function deleteProduct(id) {
   if (!confirm('Delete this product?')) return;
   const Product = Parse.Object.extend("Products");
   const query = new Parse.Query(Product);
-
   try {
     const p = await query.get(id);
     await p.destroy();
     showNotification("Product Deleted!");
     loadProducts();
-  } catch(err) {
-    alert("Error: "+err.message);
-  }
+  } catch(err){ alert("Error: "+err.message); }
 }
 
-// 🔥 RENDER PRODUCTS
-function renderProducts(filter=currentCategory, searchTerm=document.getElementById('searchBar').value) {
+// RENDER PRODUCTS
+function renderProducts(filter=currentCategory, searchTerm=document.getElementById('searchBar').value){
   let grid = document.getElementById('productGrid');
   grid.innerHTML = '';
   let filtered = filter==='all'?products:products.filter(p=>p.category===filter);
@@ -232,11 +241,11 @@ function renderProducts(filter=currentCategory, searchTerm=document.getElementBy
 }
 
 // FILTER & SEARCH
-function filterProducts(category){currentCategory=category;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');renderProducts();}
-function searchProducts(){renderProducts();}
+function filterProducts(category){ currentCategory=category; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); renderProducts(); }
+function searchProducts(){ renderProducts(); }
 
 // ADMIN LOGIN
-function openAdminLogin(){document.getElementById('loginModal').style.display='flex';}
+function openAdminLogin(){ document.getElementById('loginModal').style.display='flex'; }
 function checkPassword(){
   if(document.getElementById('adminPassword').value==='sitaram'){
     closeModal('loginModal');
@@ -245,13 +254,20 @@ function checkPassword(){
   } else alert('Wrong Password');
 }
 function showAdminTab(tab){
-  document.getElementById('addTab').style.display='none';
-  document.getElementById('deleteTab').style.display='none';
-  document.getElementById('ordersTab').style.display='none';
-  if(tab==='add') document.getElementById('addTab').style.display='block';
-  else if(tab==='delete'){document.getElementById('deleteTab').style.display='block';renderDeleteList();}
+  document.getElementById("addTab").style.display='none';
+  document.getElementById("deleteTab").style.display='none';
+  document.getElementById("ordersTab").style.display='none';
+  if(tab==='add') document.getElementById("addTab").style.display='block';
+  else if(tab==='delete'){
+    document.getElementById("deleteTab").style.display='block';
+    renderDeleteList();
+  }
+  else if(tab==='orders'){
+    document.getElementById("ordersTab").style.display='block';
+    loadOrders();
+  }
 }
-function closeModal(id){document.getElementById(id).style.display='none';}
+function closeModal(id){ document.getElementById(id).style.display='none'; }
 
 // DELETE LIST
 function renderDeleteList(){
@@ -268,15 +284,89 @@ function renderDeleteList(){
   });
 }
 
-// BUY
+// BUY & PLACE ORDER
 function openBuyModal(id){
   const p=products.find(x=>x.id==id);
   document.getElementById('buyProductName').innerText=p.name;
   document.getElementById('buyModal').setAttribute('data-product-id',id);
   document.getElementById('buyModal').style.display='flex';
 }
-function placeOrder(){ alert("Order Placed (demo)"); closeModal('buyModal'); }
+async function placeOrder(){
+  const id = document.getElementById('buyModal').getAttribute('data-product-id');
+  const product = products.find(p => p.id === id);
 
+  const name = document.getElementById('custName').value;
+  const mobile = document.getElementById('custMobile').value;
+  const address = document.getElementById('custAddress').value;
+
+  if(!name || !mobile || !address) {
+    alert("Fill all details!");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://parseapi.back4app.com/classes/Orders", {
+      method: "POST",
+      headers: {
+        "X-Parse-Application-Id": APP_ID,
+        "X-Parse-REST-API-Key": REST_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        mobile: mobile,
+        address: address,
+        product: product.name,
+        price: product.price
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.error){
+      throw new Error(data.error);
+    }
+
+    showNotification("Order Placed 🔥");
+    closeModal('buyModal');
+    loadOrders();
+
+  } catch(err){
+    alert("Error placing order: " + err.message);
+  }
+}
+// LOAD ORDERS
+async function loadOrders(){
+  try {
+    const res = await fetch("https://parseapi.back4app.com/classes/Orders", {
+      headers: {
+        "X-Parse-Application-Id": APP_ID,
+        "X-Parse-REST-API-Key": REST_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    let list = document.getElementById("ordersList");
+    list.innerHTML = "";
+
+    (data.results || []).forEach(o => {
+      let div = document.createElement("div");
+      div.className = "order-item";
+      div.innerHTML = `
+        <div>
+          <strong>${o.name}</strong> (${o.mobile})<br>
+          ${o.address}<br>
+          Product: ${o.product} - ₹${o.price}
+        </div>
+      `;
+      list.appendChild(div);
+    });
+
+  } catch(err){
+    alert("Error loading orders: " + err.message);
+  }
+}
 // NOTIFICATION
 function showNotification(msg){
   const n=document.getElementById('notification'); n.innerText=msg; n.style.display='block';
@@ -284,6 +374,14 @@ function showNotification(msg){
 }
 
 // INIT
+Parse.initialize(
+  "2863mJqPkyc6TEj1q55nkv6hsXMcBDIri3pqhw2u",  // App ID
+  "wuBmIS393iffvQFsESP2qCaU1AKHz1CH10vgsj2b"   // JS Key
+);
+Parse.serverURL = "https://parseapi.back4app.com";
+
+// Enable unsafe current user for client-side order access (development)
+Parse.User.enableUnsafeCurrentUser();
 loadProducts();
 </script>
 </body>
