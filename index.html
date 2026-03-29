@@ -189,36 +189,40 @@ async function addProduct() {
   let image = document.getElementById('pImage').value;
   let category = document.getElementById('pCategory').value;
 
-  if (!name || !price || !image) { alert("Fill all details"); return; }
+  if (!name || !price || !image) {
+    alert("Fill all details");
+    return;
+  }
 
-  const Product = Parse.Object.extend("Products");
-  const product = new Product();
-  product.set("name", name);
-  product.set("price", price);
-  product.set("image", image);
-  product.set("category", category);
-
-  let acl = new Parse.ACL();
-  acl.setPublicReadAccess(true);
-  product.setACL(acl);
-
-  try { await product.save(); showNotification("Product Added 🔥"); loadProducts(); } 
-  catch(err){ alert("Error: "+err.message); }
-}
-
-// DELETE PRODUCT
-async function deleteProduct(id) {
-  if (!confirm('Delete this product?')) return;
-  const Product = Parse.Object.extend("Products");
-  const query = new Parse.Query(Product);
   try {
-    const p = await query.get(id);
-    await p.destroy();
-    showNotification("Product Deleted!");
-    loadProducts();
-  } catch(err){ alert("Error: "+err.message); }
-}
+    const res = await fetch("https://parseapi.back4app.com/classes/Products", {
+      method: "POST",
+      headers: {
+        "X-Parse-Application-Id": APP_ID,
+        "X-Parse-REST-API-Key": REST_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        price: price,
+        image: image,
+        category: category
+      })
+    });
 
+    const data = await res.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    showNotification("Product Added 🔥");
+    loadProducts();
+
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+}
 // RENDER PRODUCTS
 function renderProducts(filter=currentCategory, searchTerm=document.getElementById('searchBar').value){
   let grid = document.getElementById('productGrid');
