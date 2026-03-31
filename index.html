@@ -150,38 +150,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 🔥 LOAD PRODUCTS
 async function loadProducts() {
-  const grid = document.getElementById('productGrid');
-  if (!grid) {
-    console.log("productGrid nahi mila");
-    return;
-  }
+  let allProducts = [];
+  let limit = 100;
+  let skip = 0;
 
-  try {
-    const res = await fetch("https://parseapi.back4app.com/classes/Products", {
-      headers: {
-        "X-Parse-Application-Id": APP_ID,
-        "X-Parse-REST-API-Key": REST_KEY
+  while (true) {
+    const res = await fetch(
+      `https://parseapi.back4app.com/classes/Products?limit=${limit}&skip=${skip}&order=-createdAt`,
+      {
+        headers: {
+          "X-Parse-Application-Id": APP_ID,
+          "X-Parse-REST-API-Key": REST_KEY
+        }
       }
-    });
+    );
 
     const data = await res.json();
 
-    products = (data.results || []).map(p => ({
-      id: p.objectId,
-      name: p.name,
-      price: p.price,
-      image: p.image,
-      category: p.category
-    }));
+    if (!data.results || data.results.length === 0) break;
 
-    renderProducts();
-    renderDeleteList();
-  } catch (err) {
-    alert("Error: " + err.message);
+    allProducts = allProducts.concat(data.results);
+    skip += limit;
   }
+
+  products = allProducts.map(p => ({
+    id: p.objectId,
+    name: p.name,
+    price: p.price,
+    image: p.image,
+    category: p.category
+  }));
+
+  renderProducts('all', '');
 }
-
-
 // ADD PRODUCT
 async function addProduct() {
   let name = document.getElementById('pName').value;
@@ -224,26 +225,51 @@ async function addProduct() {
   }
 }
 // RENDER PRODUCTS
-function renderProducts(filter=currentCategory, searchTerm=document.getElementById('searchBar').value){
+function renderProducts(filter = currentCategory, searchTerm = "") {
+
   let grid = document.getElementById('productGrid');
   grid.innerHTML = '';
-  let filtered = filter==='all'?products:products.filter(p=>p.category===filter);
-  if(searchTerm) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  if(filtered.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';return;}
-  filtered.forEach(p=>{
-    let card=document.createElement('div'); card.className='product-card';
-    card.innerHTML=`
-      <img src="${p.image}" class="product-img">
+
+  // ✅ SAFE FILTER (case-insensitive + null safe)
+  let filtered = filter === 'all'
+    ? products
+    : products.filter(p =>
+        p.category &&
+        p.category.toLowerCase().trim() === filter.toLowerCase().trim()
+      );
+
+  // ✅ SAFE SEARCH
+  if (searchTerm) {
+    filtered = filtered.filter(p =>
+      p.name &&
+      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  // ❌ agar kuch nahi mila
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:20px;">No products found.</p>';
+    return;
+  }
+
+  // ✅ SAFE RENDER (no break)
+  filtered.forEach(p => {
+
+    let card = document.createElement('div');
+    card.className = 'product-card';
+
+    card.innerHTML = `
+      <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
       <div class="product-info">
-        <div class="product-title">${p.name}</div>
-        <div class="product-price">₹${p.price}</div>
+        <div class="product-title">${p.name || 'No Name'}</div>
+        <div class="product-price">₹${p.price || 0}</div>
         <button class="buy-btn" onclick="openBuyModal('${p.id}')">Buy Now</button>
       </div>
     `;
+
     grid.appendChild(card);
   });
 }
-
 // FILTER & SEARCH
 function filterProducts(category){ currentCategory=category; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); renderProducts(); }
 function searchProducts(){ renderProducts(); }
@@ -342,12 +368,18 @@ async function placeOrder(){
 // LOAD ORDERS
 async function loadOrders(){
   try {
-    const res = await fetch("https://parseapi.back4app.com/classes/Orders", {
-      headers: {
-        "X-Parse-Application-Id": APP_ID,
-        "X-Parse-REST-API-Key": REST_KEY
-      }
-    });
+   const res = await fetch(
+  "https://parseapi.back4app.com/classes/Products?limit=1000&order=-createdAt&ts=" + new Date().getTime(),
+  {
+    method: "GET",
+    headers: {
+      "X-Parse-Application-Id": APP_ID,
+      "X-Parse-REST-API-Key": REST_KEY,
+      "Cache-Control": "no-cache"
+    },
+    cache: "no-store"
+  }
+);
 
     const data = await res.json();
 
