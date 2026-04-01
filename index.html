@@ -18,7 +18,62 @@ header { background-color: var(--primary); color: var(--white); padding: 15px 20
 .cart-icon { font-size: 1.2rem; }
 .hero { background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); padding: 40px 20px; text-align: center; margin-bottom: 20px; }
 .hero h1 { color: var(--dark); margin-bottom: 10px; }
-.categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding: 0 10px; }
+/* Categories container responsive & scrollable */
+.categories {
+  display: flex;
+  overflow-x: auto;       /* horizontal scroll enable */
+  gap: 8px;               /* buttons ke beech gap */
+  padding: 10px 5px;      /* thoda padding upar-niche aur sides */
+  scroll-behavior: smooth; /* smooth scroll effect */
+  -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
+}
+
+/* Scrollbar hide karne ke liye (optional) */
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+/* Category buttons responsive */
+.cat-btn {
+  flex: 0 0 auto;         /* button fixed size, scrollable container me shrink na ho */
+  padding: 6px 14px;      
+  font-size: 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;    /* text wrap na ho */
+  transition: 0.3s;
+}
+
+/* Active or hover state */
+.cat-btn.active,
+.cat-btn:hover {
+  background-color: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+/* Small screen adjustments */
+@media (max-width: 768px) {
+  .categories {
+    padding: 8px 5px;
+    gap: 6px;
+  }
+  .cat-btn {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories {
+    gap: 5px;
+    padding: 6px 4px;
+  }
+  .cat-btn {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+}
 .cat-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
 .cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
