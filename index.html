@@ -79,7 +79,13 @@ header { background-color: var(--primary); color: var(--white); padding: 15px 20
 .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
 .product-card { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-.product-img { width: 100%; height: 180px; object-fit: cover; background-color: #eee; }
+..product-img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  background: #f4f4f4;
+  padding: 5px;
+}
 .product-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
 .product-title { font-size: 0.9rem; margin-bottom: 5px; color: var(--dark); }
 .product-price { font-weight: bold; color: var(--primary); font-size: 1.1rem; margin-bottom: 10px; }
